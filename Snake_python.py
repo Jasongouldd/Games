@@ -16,7 +16,6 @@ BLUE = (0, 0, 255)
 # Game settings
 FPS = 60
 VEL = 4
-GAP = 2
 
 # Snake dimensions
 SNAKE_WIDTH, SNAKE_HEIGHT = (20, 20)
