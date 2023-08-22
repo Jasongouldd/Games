@@ -15,11 +15,26 @@ FPS = 10
 
 def main():
 
+    board.select_game_modes()
+
+    bot = None
+    flag = True
+
+    while flag:
+        for event in pygame.event.get():
+
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                pos = pygame.mouse.get_pos()
+
+
+                bot, flag = board.select_game_mode(pos[0], pos[1])
+
+
     run = True
     clock = pygame.time.Clock()
-    Turn = 'White'
+    Turn = 'Black'
     board.draw_board()
-    potential_moves = []
+    potential_moves = [[2, 3, 4], [2, 3, 5], [2, 4, 2], [2, 5, 3]]
 
     while run:
         clock.tick(FPS)
@@ -27,7 +42,19 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
-        
+
+        if Turn == 'Black' and bot:
+            pygame.time.delay(1000)
+            if bot == "Easy Bot":
+                Turn = board.easy_bot(potential_moves, Turn)
+            else:
+                Turn = board.hard_bot(potential_moves, Turn)
+
+            board.display_window()
+            board.remove_potential_moves(potential_moves)
+
+
+
 
         if event.type == pygame.MOUSEBUTTONDOWN:
             pos = pygame.mouse.get_pos()
@@ -35,14 +62,19 @@ def main():
 
             board.display_window()
 
+            board.remove_potential_moves(potential_moves)
 
-            board.remove_potential_moves(potential_moves)  
+        potential_moves = board.potential_moves(Turn)
+
+        if len(potential_moves)==0:
+            Turn = "White" if Turn == "Black" else "Black"
             potential_moves = board.potential_moves(Turn)
+            board.show_potential_moves(potential_moves, Turn)
 
             if len(potential_moves)==0:
                 board.winner()
-            
-            board.show_potential_moves(potential_moves, Turn)
+
+        board.show_potential_moves(potential_moves, Turn)
 
 
     pygame.quit()
